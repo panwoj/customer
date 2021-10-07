@@ -10,7 +10,8 @@ management:
     web:
       exposure:
         include: 'info,health,refresh,metrics,mapings'
-
+eureka:
+  client: ${eureka-client}
 # ACTUATOR INFO
 info:
   app:
