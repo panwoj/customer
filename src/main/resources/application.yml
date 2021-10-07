@@ -1,0 +1,21 @@
+spring:
+  config:
+    import: "optional:configserver:"
+  application:
+    name: customers
+  profiles:
+    active: production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'info,health,refresh,metrics,mapings'
+
+# ACTUATOR INFO
+info:
+  app:
+    name: "Customer"
+    version: "0.0.1"
+    profile: ${spring.profiles.active}
+  serverInfo:
+    port: ${server.port}
