@@ -5,13 +5,15 @@ import com.wpirog.customer.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class CustomerService {
     @Autowired
     private CustomerRepository repository;
 
-    public Customer getAccount(final Long idCustomer) {
-        return repository.findById(idCustomer).get();
+    public Optional<Customer> getAccount(final Long idCustomer) {
+        return repository.findById(idCustomer);
     }
 
     public Customer saveCustomer(Customer customer) {
