@@ -12,7 +12,7 @@ public class CustomerService {
     @Autowired
     private CustomerRepository repository;
 
-    public Optional<Customer> getAccount(final Long idCustomer) {
+    public Optional<Customer> getCustomer(final Long idCustomer) {
         return repository.findById(idCustomer);
     }
 
