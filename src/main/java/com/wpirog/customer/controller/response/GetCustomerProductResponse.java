@@ -16,4 +16,5 @@ public class GetCustomerProductResponse {
     private Long customerId;
     private String fullName;
     private List<AccountDto> accounts;
+    private String cardNumber;
 }

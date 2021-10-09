@@ -5,6 +5,7 @@ import com.wpirog.customer.controller.response.GetCustomerResponse;
 import com.wpirog.customer.domain.AccountDto;
 import com.wpirog.customer.domain.CustomerDto;
 import com.wpirog.customer.mapper.CustomerMapper;
+import com.wpirog.customer.service.CardService;
 import com.wpirog.customer.service.CustomerService;
 import com.wpirog.customer.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,9 @@ public class CustomerController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CardService cardService;
+
     @GetMapping("/{idCustomer}")
     public GetCustomerResponse getCustomers(@PathVariable Long idCustomer) {
         var customer = customerService.getCustomer(idCustomer).orElse(null);
@@ -47,12 +51,14 @@ public class CustomerController {
         CustomerDto customerDto = mapper.mapToCustomerDto(customerService.getCustomer(idCustomer)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST)));
         AccountDto accountDto = productService.findCustomersAccount(idCustomer);
+        String cardNumber = cardService.findCustomerCardNumber(idCustomer);
 
         log.info("Get products for customerId: {}", idCustomer);
         return GetCustomerProductResponse.builder()
                 .customerId(customerDto.getId())
                 .fullName(customerDto.getFirstName() + " " + customerDto.getLastName())
                 .accounts(List.of(accountDto))
+                .cardNumber(cardNumber)
                 .build();
     }
 

@@ -24,3 +24,5 @@ resilience4j.circuitbreaker:
   instances:
     productService:
       baseConfig: default
+    cardService:
+      baseConfig: default
