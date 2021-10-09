@@ -20,3 +20,7 @@ info:
     profile: ${spring.profiles.active}
   serverInfo:
     port: ${server.port}
+resilience4j.circuitbreaker:
+  instances:
+    productService:
+      baseConfig: default
