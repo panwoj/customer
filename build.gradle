@@ -1,8 +1,25 @@
+import org.springframework.cloud.contract.verifier.config.TestFramework
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url "Users/panwo/.m2/repository" }
+    }
+
+    dependencies {
+        classpath 'org.springframework.cloud:spring-cloud-contract-gradle-plugin:3.0.3'
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.5.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
+
+apply plugin: 'spring-cloud-contract'
+apply plugin: 'maven-publish'
 
 group = 'com.wpirog.customer'
 version = '0.0.1-SNAPSHOT'
@@ -10,6 +27,7 @@ sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -28,11 +46,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot2', version: '1.7.0'
     implementation group: 'io.github.resilience4j', name: 'resilience4j-all', version: '1.7.0'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.4'
+    implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-api', version: '1.7.2'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
+    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-contract-verifier', version: '3.0.4'
+    testImplementation 'com.h2database:h2:1.4.200'
 }
+
 
 test {
     useJUnitPlatform()
@@ -47,3 +71,28 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
+
+contracts {
+    testFramework = TestFramework.JUNIT5
+    packageWithBaseClasses = 'com.wpirog.accounts'
+}
+
+task stubsJar(type: Jar) {
+    classifier = "stubs"
+    into("META-INF/${project.group}/${project.name}/${project.version}/mappings") {
+        include('**/*.*')
+        from("${project.buildDir}/generated-snippets/stubs")
+    }
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+//
+//publishing {
+//    publications {
+//        myPublicationName(MavenPublication) {
+//            artifact stubsJar
+//        }
+//    }
+//}
